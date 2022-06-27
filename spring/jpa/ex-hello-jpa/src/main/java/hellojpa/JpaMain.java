@@ -28,6 +28,7 @@ public class JpaMain {
             tx.commit();
             */
 
+            /*
             // 값 조회
             Member findMember = em.find(Member.class, 1L);      // 클래스명, PK 값
             System.out.println("findMember id = " + findMember.getId() + "findMember name = " + findMember.getName());
@@ -46,7 +47,7 @@ public class JpaMain {
             for (Member member : result) {
                 System.out.println("member.name =" + member.getName());
             }
-            
+            */
             tx.commit();        // tx.commit() 할 때 commit 나간다.
         } catch (Exception e) {
             // 트랜잭션 롤백
