@@ -17,38 +17,19 @@ public class JpaMain {
 
         // 정석적으로 JPA 사용시 이와같이 사용하지만 스프링에서 다 자동으로 동작한다.
         try {
-            /*
+
             // 값 입력
             Member member = new Member();
-            member.setId(2L);
-            member.setName("helloB");
 
+            member.setUsername("C");
+            System.out.println("=================");
             em.persist(member);
+            System.out.println("member = " + member.getId());
 
+            System.out.println("=================");
             tx.commit();
-            */
-
-            /*
-            // 값 조회
-            Member findMember = em.find(Member.class, 1L);      // 클래스명, PK 값
-            System.out.println("findMember id = " + findMember.getId() + "findMember name = " + findMember.getName());
-
-//            em.remove(findMember);    // em.remove() 를 통해 삭제
-
-            // 수정
-            findMember.setName("HelloJPA");
-            // set 으로만 값 변경되는 이유 : JPA 를 통해서 데이터를 가져오면 JPA 가 관리하며,
-            // 데이터의 값이 변경된 것을 트랜잭션 커밋 시 체크하고, 변경되었으면 update 쿼리를 보낸다.
 
 
-            // JPQL (전체 조회)
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)     // 객체를 대상으로 쿼리를 짠다.
-                    .getResultList();
-            for (Member member : result) {
-                System.out.println("member.name =" + member.getName());
-            }
-            */
-            tx.commit();        // tx.commit() 할 때 commit 나간다.
         } catch (Exception e) {
             // 트랜잭션 롤백
             tx.rollback();
