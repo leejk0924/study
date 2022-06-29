@@ -1,16 +1,14 @@
-package item5.dependencyinjection;
+package item5.factorymethod;
 
 import item5.Dictionary;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public class SpellChecker {
-
     private Dictionary dictionary;
 
-    public SpellChecker(Dictionary dictionary) {
-        this.dictionary = dictionary;
+    public SpellChecker (DictionaryFactory dictionaryFactory) {
+        this.dictionary = dictionaryFactory.getDictionary();
     }
 
     public boolean isValid(String word) {
@@ -21,7 +19,4 @@ public class SpellChecker {
         return dictionary.closeWordsTo(typo);
     }
 
-    public SpellChecker(Supplier<Dictionary> dictionarySupplier) {
-
-    }
 }
