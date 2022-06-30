@@ -6,7 +6,7 @@
     // request, response 사용 가능 (JSP 도 결국에는 서블릿으로 자동으로 변환되어 사용되기 때문에 사용 가능 : 문법상 지원)
     MemberRepository memberRepository = MemberRepository.getInstance();
 
-    System.out.println("MemberSave.service");
+    System.out.println("MemberSaveServlet.service");
     String username = request.getParameter("username");
 
     int age = Integer.parseInt(request.getParameter("age"));
@@ -15,7 +15,6 @@
     memberRepository.save(member);
 
 %>
-
 <html>
 <head>
     <title>Title</title>
