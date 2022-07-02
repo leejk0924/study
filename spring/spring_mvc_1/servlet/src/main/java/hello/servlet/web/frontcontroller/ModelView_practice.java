@@ -8,11 +8,11 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class ModelView2 {
+public class ModelView_practice {
     private String viewName;
     private Map<String, Object> model = new HashMap<>();
 
-    public ModelView2(String viewName) {
+    public ModelView_practice(String viewName) {
         this.viewName = viewName;
     }
 }
