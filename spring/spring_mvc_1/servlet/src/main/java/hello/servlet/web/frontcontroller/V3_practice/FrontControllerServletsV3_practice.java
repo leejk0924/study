@@ -1,6 +1,7 @@
 package hello.servlet.web.frontcontroller.V3_practice;
 
-import hello.servlet.web.frontcontroller.ModelView2;
+
+import hello.servlet.web.frontcontroller.ModelView_practice;
 import hello.servlet.web.frontcontroller.MyView_practice;
 import hello.servlet.web.frontcontroller.V3_practice.controller.MemberFormControllerV3_practice;
 import hello.servlet.web.frontcontroller.V3_practice.controller.MemberListControllerV3_practice;
@@ -40,7 +41,7 @@ public class FrontControllerServletsV3_practice extends HttpServlet {
         Map<String, String> paramMap = createParamMap2(request);
 
 
-        ModelView2 mv = controller.process(paramMap);
+        ModelView_practice mv = controller.process(paramMap);
 
         String viewName = mv.getViewName();
         MyView_practice view = viewResolver(viewName);
