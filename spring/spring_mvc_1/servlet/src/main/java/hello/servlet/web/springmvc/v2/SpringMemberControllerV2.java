@@ -20,14 +20,6 @@ public class SpringMemberControllerV2 {
         return new ModelAndView("new-form");
     }
 
-    @RequestMapping
-    public ModelAndView members() {
-        List<Member> members = memberRepository.findAll();
-        ModelAndView mv = new ModelAndView("members");
-        mv.getModel().put("members", members);
-        return mv;
-    }
-
     @RequestMapping("/save")
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
 
@@ -41,4 +33,14 @@ public class SpringMemberControllerV2 {
         mv.addObject("member", member);
         return mv;
     }
+
+    @RequestMapping
+    public ModelAndView members() {
+        List<Member> members = memberRepository.findAll();
+        ModelAndView mv = new ModelAndView("members");
+        mv.getModel().put("members", members);
+        return mv;
+    }
+
+
 }
