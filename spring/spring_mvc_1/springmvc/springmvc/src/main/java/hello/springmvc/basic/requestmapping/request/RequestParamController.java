@@ -1,7 +1,9 @@
 package hello.springmvc.basic.requestmapping.request;
 
+import hello.springmvc.basic.HelloData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -77,5 +79,22 @@ public class RequestParamController {
         return "ok";
     }
 
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloDate) {
+        // 요청 파라미터의 이름으로 객체의 프로퍼티(세터와 겟터 등)를 찾는다. 그리고 해당 프로퍼티의 setter를 호출해서 파라미터의 값을 바인딩한다.
+        log.info("username={}, age={}", helloDate.getUsername(), helloDate.getAge());
+        return "ok";
+    }
 
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloDate) {
+        // @ModelAttribute 생략 가능
+        // 스프링은 기본타입(String, int, Integer)를 제외한 나머지는 @ModelAttribute 로 사용하여 생략가능
+        // 예외, argument resolver 로 지정한 타입은 불가 (HttpServletResponse 등)
+        // 기본적으로 내가 만드는 클래스는 @ModelAttribute 생략가능 (설정을 통해 argument resolver 로 설정 가능)
+        log.info("username={}, age={}", helloDate.getUsername(), helloDate.getAge());
+        return "ok";
+    }
 }
