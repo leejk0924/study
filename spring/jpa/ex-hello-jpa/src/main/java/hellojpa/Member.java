@@ -23,5 +23,5 @@ public class Member {
 //    private Long teamId;
     @ManyToOne
     @JoinColumn(name="TEAM_ID")     // DB와의 관계와 join 하는 컬럼명을 적어주어야 한다.
-    private Team team;
+    private Team team;  // 연관관계의 주인
 }
