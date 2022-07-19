@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // @Entity 애너테이션은 JPA 를 사용하는 객체라고 인식시켜주고 관리하게 한다.
 @Entity
@@ -28,6 +30,9 @@ public class Member {
     @OneToOne
     @JoinColumn(name = "LOCKER_ID")
     private Locker locker;
+
+    @OneToMany @JoinTable(name = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 
     public void changeTeam(Team team) {
         this.team = team;
