@@ -1,5 +1,8 @@
 package hellojpa;
 
+import hellojpa.advancedmapping.Item;
+import hellojpa.advancedmapping.Movie;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -17,34 +20,20 @@ public class JpaMain {
 
         // 정석적으로 JPA 사용시 이와같이 사용하지만 스프링에서 다 자동으로 동작한다.
         try {
-
-            Team team = new Team();
-            team.setName("TeamA");
-//            team.getMembers().add(member);
-            em.persist(team);
-
-
-            Member member = new Member();
-            member.setUserName("member1");
-            member.changeTeam(team);
-            em.persist(member);
-
-            // 양쪽 모두 값을 넣을땐 값 넣기 가능
-            // 해당 코드는 Member의 changeMethod 시 자동으로 실행되게 만든다. (연관관계 편의 메서드)
-            //  연관관계 편의 메서드는 어느 곳에 두어도 괜찮지만 한곳에만 만들어야한다.(무한루프 위험 - toString(), lombok, JSON 생성 라이브러리)
-//            team.getMembers().add(member);
-
+            Movie movie = new Movie();
+            movie.setDirector("aaa");
+            movie.setActor("bbb");
+            movie.setName("바람과 함꼐 사라지다.");
+            movie.setPrice(10000);
+            em.persist(movie);
 
             em.flush();
             em.clear();
-
-            Team findTeam = em.find(Team.class, team.getId());
-            List<Member> members = findTeam.getMembers();
-            for (Member m : members) {
-                System.out.println("m = " + m.getUserName());
-            }
+            Item item = em.find(Item.class, movie.getId());
 
 
+            Movie findMovie = em.find(Movie.class, movie.getId());
+            System.out.println("findMovie = " + findMovie);
             tx.commit();        // tx.commit() 할 때 commit 나간다.
         } catch (Exception e) {
             // 트랜잭션 롤백
