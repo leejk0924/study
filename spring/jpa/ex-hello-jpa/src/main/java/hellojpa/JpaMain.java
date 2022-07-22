@@ -4,6 +4,7 @@ import hellojpa.advancedmapping.Item;
 import hellojpa.advancedmapping.Movie;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JpaMain {
@@ -20,20 +21,16 @@ public class JpaMain {
 
         // 정석적으로 JPA 사용시 이와같이 사용하지만 스프링에서 다 자동으로 동작한다.
         try {
-            Movie movie = new Movie();
-            movie.setDirector("aaa");
-            movie.setActor("bbb");
-            movie.setName("바람과 함꼐 사라지다.");
-            movie.setPrice(10000);
-            em.persist(movie);
+            Member member = new Member();
+            member.setCreatedBy("kim");
+            member.setUserName("user1");
+            member.setCreatedDate(LocalDateTime.now());
+
+            em.persist(member);
 
             em.flush();
             em.clear();
-            Item item = em.find(Item.class, movie.getId());
 
-
-            Movie findMovie = em.find(Movie.class, movie.getId());
-            System.out.println("findMovie = " + findMovie);
             tx.commit();        // tx.commit() 할 때 commit 나간다.
         } catch (Exception e) {
             // 트랜잭션 롤백
