@@ -1,5 +1,6 @@
 package hellojpa;
 
+import hellojpa.advancedmapping.Book;
 import hellojpa.advancedmapping.Item;
 import hellojpa.advancedmapping.Movie;
 
@@ -21,12 +22,10 @@ public class JpaMain {
 
         // 정석적으로 JPA 사용시 이와같이 사용하지만 스프링에서 다 자동으로 동작한다.
         try {
-            Member member = new Member();
-            member.setCreatedBy("kim");
-            member.setUserName("user1");
-            member.setCreatedDate(LocalDateTime.now());
-
-            em.persist(member);
+            Book book =new Book();
+            book.setName("JPA");
+            book.setAuthor("김영한");
+            em.persist(book);
 
             em.flush();
             em.clear();
