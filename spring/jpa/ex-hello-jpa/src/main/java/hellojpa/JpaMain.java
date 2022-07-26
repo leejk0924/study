@@ -1,12 +1,6 @@
 package hellojpa;
 
-import hellojpa.advancedmapping.Book;
-import hellojpa.advancedmapping.Item;
-import hellojpa.advancedmapping.Movie;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -22,14 +16,20 @@ public class JpaMain {
 
         // 정석적으로 JPA 사용시 이와같이 사용하지만 스프링에서 다 자동으로 동작한다.
         try {
-            Book book =new Book();
-            book.setName("JPA");
-            book.setAuthor("김영한");
-            em.persist(book);
+
+            Member member = new Member();
+            member.setUserName("hello");
+
+            em.persist(member);
 
             em.flush();
             em.clear();
 
+            //
+//            Member findMember = em.find(Member.class, member.getId());
+            Member findMember = em.getReference(Member.class, member.getId());
+//            System.out.println("findMember.getId() = " + findMember.getId());
+//            System.out.println("findMember.getUserName() = " + findMember.getUserName());
             tx.commit();        // tx.commit() 할 때 commit 나간다.
         } catch (Exception e) {
             // 트랜잭션 롤백
@@ -38,5 +38,17 @@ public class JpaMain {
             em.close();
         }
         emf.close();
+    }
+
+    private static void printMember(Member member) {
+        System.out.println("member = " + member);
+    }
+
+    private static void printMemberAndTeam(Member member) {
+        String userName = member.getUserName();
+        System.out.println("userName = " + userName);
+
+        Team team = member.getTeam();
+        System.out.println("team = " + team);
     }
 }

@@ -28,9 +28,7 @@ public class Member  extends BaseEntity{
     @JoinColumn(name="TEAM_ID")     // DB와의 관계와 join 하는 컬럼명을 적어주어야 한다.
     private Team team;  // 연관관계의 주인
 
-    @OneToOne
-    @JoinColumn(name = "LOCKER_ID")
-    private Locker locker;
+
 
     @OneToMany @JoinTable(name = "member")
     private List<MemberProduct> memberProducts = new ArrayList<>();
