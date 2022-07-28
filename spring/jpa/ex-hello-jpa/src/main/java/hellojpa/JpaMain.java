@@ -17,19 +17,22 @@ public class JpaMain {
         // 정석적으로 JPA 사용시 이와같이 사용하지만 스프링에서 다 자동으로 동작한다.
         try {
 
-            Member member = new Member();
-            member.setUserName("hello");
+            Parent parent = new Parent();
 
-            em.persist(member);
+            Child child1 = new Child();
+            Child child2 = new Child();
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            em.persist(parent);
+            em.persist(child1);
+            em.persist(child2);
 
             em.flush();
             em.clear();
 
-            //
-//            Member findMember = em.find(Member.class, member.getId());
-            Member findMember = em.getReference(Member.class, member.getId());
-//            System.out.println("findMember.getId() = " + findMember.getId());
-//            System.out.println("findMember.getUserName() = " + findMember.getUserName());
+            Parent findParent = em.find(Parent.class, parent.getId());
+            findParent.getChildList().remove(0);
             tx.commit();        // tx.commit() 할 때 commit 나간다.
         } catch (Exception e) {
             // 트랜잭션 롤백
@@ -38,17 +41,5 @@ public class JpaMain {
             em.close();
         }
         emf.close();
-    }
-
-    private static void printMember(Member member) {
-        System.out.println("member = " + member);
-    }
-
-    private static void printMemberAndTeam(Member member) {
-        String userName = member.getUserName();
-        System.out.println("userName = " + userName);
-
-        Team team = member.getTeam();
-        System.out.println("team = " + team);
     }
 }
