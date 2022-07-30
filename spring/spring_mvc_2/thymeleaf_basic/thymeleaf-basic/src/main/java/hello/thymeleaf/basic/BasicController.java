@@ -18,6 +18,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/basic")
 public class BasicController {
+    // 텍스트 - text, utext
     @GetMapping("text-basic")
     public String textBasic(Model model) {
         model.addAttribute("data", "Hello <b>Spring!</b>");
@@ -30,6 +31,7 @@ public class BasicController {
         return "basic/text-unescaped";
     }
 
+    // 변수 - SpringEL
     @GetMapping("/variable")
     public String variable(Model model) {
         User userA = new User("userA", 10);
@@ -54,6 +56,7 @@ public class BasicController {
         private int age;
     }
 
+    // 기본 객체들
     @GetMapping("/basic-objects")
     public String basicObjects(HttpSession session) {
         session.setAttribute("sessionData", "Hello Session");
@@ -67,9 +70,18 @@ public class BasicController {
         }
     }
 
+    // 유틸리티 객체와 날짜
     @GetMapping("/date")
     public String date(Model model) {
         model.addAttribute("localDateTime", LocalDateTime.now());
         return "basic/date";
+    }
+
+    // URL 링크
+    @GetMapping("link")
+    public String link(Model model) {
+        model.addAttribute("param1", "data1");
+        model.addAttribute("param2", "data2");
+        return "basic/link";
     }
 }
