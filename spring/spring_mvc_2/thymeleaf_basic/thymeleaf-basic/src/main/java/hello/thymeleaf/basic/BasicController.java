@@ -99,4 +99,10 @@ public class BasicController {
         model.addAttribute("data", "Spring!");
         return "basic/operation";
     }
+
+    // 속성 값 설정
+    @GetMapping("/attribute")
+    public String attribute() {
+        return "basic/attribute";
+    }
 }
