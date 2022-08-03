@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -19,7 +21,19 @@ public class FormItemController {
 
     private final ItemRepository itemRepository;
 
+    // 해당 Controller 에 있는 메서드들이 호출될 떄 먼저 실행된다.
+    // model.addAttribute("regions", regions); 와 동일일    @ModelAttribute("regions")
+    public Map<String, String> regions() {
+        Map<String, String> regions = new LinkedHashMap<>();
+        regions.put("SEOUL", "서울");
+        regions.put("BUSAN", "부산");
+        regions.put("JEJU", "제주");
+        return regions;
+    }
+
+
     @GetMapping
+
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
         model.addAttribute("items", items);
@@ -44,6 +58,7 @@ public class FormItemController {
         // HTML 에서 (체크박스 선택 시) 'on' 문자를 보내면, 스프링에서 'true' 타입으로 변환해준다. (스프링 타입 컨버터가 이 기능을 수행)
         // 체크박스 체크 : 'on' , 체크 박스 체크 안했을 경우 : null 을 넘긴다.
         log.info("item.open={}", item.getOpen());
+        log.info("item.regions={}", item.getRegions());
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
@@ -62,7 +77,6 @@ public class FormItemController {
         itemRepository.update(itemId, item);
         return "redirect:/form/items/{itemId}";
     }
-
 
 
 }
