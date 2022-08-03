@@ -4,3 +4,10 @@ server:
     context-path: /
     encoding:
       charset: UTF-8
+
+#logging:
+#  level:
+#    org:
+#      apache:
+#        coyote:
+#          http11: debug
