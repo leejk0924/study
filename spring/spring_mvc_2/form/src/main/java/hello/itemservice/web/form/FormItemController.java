@@ -2,6 +2,7 @@ package hello.itemservice.web.form;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
+import hello.itemservice.domain.item.ItemType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,8 @@ public class FormItemController {
     private final ItemRepository itemRepository;
 
     // 해당 Controller 에 있는 메서드들이 호출될 떄 먼저 실행된다.
-    // model.addAttribute("regions", regions); 와 동일일    @ModelAttribute("regions")
+    // model.addAttribute("regions", regions); 와 동일일
+    @ModelAttribute("regions")
     public Map<String, String> regions() {
         Map<String, String> regions = new LinkedHashMap<>();
         regions.put("SEOUL", "서울");
@@ -31,9 +33,13 @@ public class FormItemController {
         return regions;
     }
 
+    @ModelAttribute("itemTypes")
+    public ItemType[] itemTypes() {
+        return ItemType.values();
+    }
+
 
     @GetMapping
-
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
         model.addAttribute("items", items);
@@ -59,6 +65,7 @@ public class FormItemController {
         // 체크박스 체크 : 'on' , 체크 박스 체크 안했을 경우 : null 을 넘긴다.
         log.info("item.open={}", item.getOpen());
         log.info("item.regions={}", item.getRegions());
+        log.info("item.itemType={}", item.getItemType());
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
