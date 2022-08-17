@@ -7,8 +7,6 @@ package com.example.security.config.auth;
 // User 오브젝트 타입 => UserDetails 타입 객체
 
 import com.example.security.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
