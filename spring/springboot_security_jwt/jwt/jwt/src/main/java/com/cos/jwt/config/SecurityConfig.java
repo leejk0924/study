@@ -1,11 +1,13 @@
 package com.cos.jwt.config;
 
+import com.cos.jwt.filter.MyFilter3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
 
@@ -19,7 +21,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+        http.addFilterBefore(new MyFilter3(), BasicAuthenticationFilter.class); // 스프링 시큐리티보다 먼저 필터 적용
+//        http.addFilterAfter(new MyFilter3(), BasicAuthenticationFilter.class);
         http.csrf().disable();
         // 세션을 사용하지 않는 서버를 만든다는 코드 (stateless 서버 만든다는 뜻)
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
