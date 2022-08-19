@@ -1,5 +1,6 @@
 package com.cos.jwt.config;
 
+import com.cos.jwt.config.auth.jwt.JwtAuthenticationFilter;
 import com.cos.jwt.filter.MyFilter3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // HTTP header 에 Authorization 을 담아서 요청하는 방식이 httpBasic 방식 (인증 요청시 사용되는 ID, PW 가 평문으로 보내짐)
                 // bearer Authentication 방식은 ID와 PW 으로 토큰을 만들어 전송하는 방식으로 httpBasic 보다는 안전하다 [bearer 방식을 사용하려면 httpBasic()을 disable 해야한다.]
                 .httpBasic().disable()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager()))   // 필터에 다시 등록    // AuthenticationManager 을 보내줘야함
                 .authorizeRequests()
                 .antMatchers("/api/v1/user/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
