@@ -82,11 +82,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String jwtToken = JWT.create()
 //                .withSubject(principalDetails.getUsername())
                 .withSubject("cos토큰")
-                .withExpiresAt(new Date(System.currentTimeMillis() + (60000 * 30)))    // 만료시간 설정 (30분 설정)
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))    // 만료시간 설정 (30분 설정)
                 .withClaim("id", principalDetails.getUser().getId())
                 .withClaim("username", principalDetails.getUser().getUsername())
-                .sign(Algorithm.HMAC512("cos"));
+                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
-        response.addHeader("Authorization", "Bearer " + jwtToken);  // "Bearer " <- 한칸 띄어쓰기 해줘야함
+        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);  // "Bearer " <- 한칸 띄어쓰기 해줘야함
     }
 }
