@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -36,8 +35,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 //        super.doFilterInternal(request, response, chain);     // 응답이 2번 되기 때문에 지워야함 (66줄 chain 과 중복)
         System.out.println("인증이나 권한이 필요한 주소 요청이 됨.");
         String jwtHeader = request.getHeader("Authorization");
-
-
 
         // header 가 있는지 확인
         if (jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
@@ -67,8 +64,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
             chain.doFilter(request, response);
         }
-
     }
-
     // JWT 토큰을 검증을 해서 정상적인 사용자인지 확인인
 }

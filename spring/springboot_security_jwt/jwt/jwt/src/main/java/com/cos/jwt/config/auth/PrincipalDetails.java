@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 

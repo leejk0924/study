@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             // authentication 객체가 session 영역에 저장됨. => 로그인이 되었다는 뜻뜻
             PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            System.out.println("로그인 완료됨"+principalDetails.getUser().getUsername());       // 로그인이 정상적으로 되었다는 뜻
+            System.out.println("로그인 완료됨" + principalDetails.getUser().getUsername());       // 로그인이 정상적으로 되었다는 뜻
             // authentication 객체가 session 영역에 저장을 해야하고 그 방법이 return 해주면됨
             // return 의 이유는 권한 관리를 security 가 대신 해주기 떄문에 편하려고 하는거임
             // 굳이 JWT 토큰을 사용하면서 세션을 만들 이유가 없음. 근데 단지 권한 처리 때문에 session 넣어 준다.
@@ -71,6 +71,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 4. JWT 토큰을 만들어서 응답해주면 된다.
         return null;
     }
+
     // attemptAuthentication 실행 후 인증이 정상적으로 되었으면 successfulAuthentication 함수가 실행된다.
     // JWT 토큰을 만들어서 request 요청한 사용자에게 JWT 토큰을 response 해주면 됨.
     @Override
