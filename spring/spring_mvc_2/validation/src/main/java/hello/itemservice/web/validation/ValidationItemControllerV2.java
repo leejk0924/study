@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -160,10 +161,13 @@ public class ValidationItemControllerV2 {
         log.info("objectName={}", bindingResult.getObjectName());
         log.info("target={}", bindingResult.getTarget());
 
-        // FiledError 는 오류 발생 시 사용자 입력 값을 저장하는 기능을 제공한다.
-        if (!StringUtils.hasText(item.getItemName())) {
-            bindingResult.rejectValue("itemName", "required");
-        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult, "itemName", "required");
+
+//        // FiledError 는 오류 발생 시 사용자 입력 값을 저장하는 기능을 제공한다.
+//        if (!StringUtils.hasText(item.getItemName())) {
+//            bindingResult.rejectValue("itemName", "required");
+//
+//        }
         if (item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1000000) {
             bindingResult.rejectValue("price", "range", new Object[]{1000, 1000000}, null);
 
