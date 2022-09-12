@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 public class Item {
 
     private Long id;
-    @NotBlank
+    @NotBlank(message = "공백x")
     private String itemName;
 
     @NotNull
