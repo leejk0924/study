@@ -11,9 +11,9 @@ import javax.validation.constraints.NotNull;
 //// 권장 하지 않는 방법
 //@ScriptAssert(lang = "javascript", script = "_this.price * _this.quantity >= 10000", message = "총합이 10000원 넘게 입력해 주세요")
 public class Item {
-
+    @NotNull    // 수정 요구사항 추가
     private Long id;
-    @NotBlank(message = "공백x")
+    @NotBlank
     private String itemName;
 
     @NotNull
@@ -21,7 +21,7 @@ public class Item {
     private Integer price;
 
     @NotNull
-    @Range(max = 9999)
+//    @Range(max = 9999)    // 수정 요구사항 추가
     private Integer quantity;
 
     public Item() {
