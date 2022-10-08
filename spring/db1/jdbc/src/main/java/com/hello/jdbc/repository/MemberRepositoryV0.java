@@ -5,6 +5,7 @@ import com.hello.jdbc.domain.Member;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
+import java.util.NoSuchElementException;
 
 /**
  * JDBC - DriverManager 사용
@@ -34,6 +35,37 @@ public class MemberRepositoryV0 {
             // pstmt 와 con 을 close 해주지 않으면 계속해서 연결이 유지되어 있다.
             // Exception 발생할 경우 con 이 호출이 안될 수 있다.
             close(con, pstmt, null);
+        }
+    }
+
+    public Member findById(String memberId) throws SQLException {
+        String sql = "select * from member where member_id = ?";
+
+        // try catch 로 finally 에서 close 해야하기 때문에 미리 선언
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, memberId);
+            // select 문은 executeQuery 사용 (ResultSet 반환해준다.)
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                Member member = new Member();
+                member.setMemberId(rs.getString("member_id"));
+                member.setMoney(rs.getInt("money"));
+                return member;
+            } else {
+                throw new NoSuchElementException("member not found memberId = " + memberId);
+            }
+        } catch (SQLException e) {
+            log.error("db error", e);
+            throw e;
+        }finally {
+            close(con, pstmt, rs);
         }
     }
 
