@@ -1,24 +1,38 @@
 package com.hello.jdbc.repository;
 
 import com.hello.jdbc.domain.Member;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
+import static com.hello.jdbc.connection.ConnectionConst.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * FDBC 0 DriverManager 사용
+ * JDBC - DataSource 사용, JdbcUtils 사용
  */
 @Slf4j
-class MemberRepositoryV0Test {
+class MemberRepositoryV1Test {
 
-    MemberRepositoryV0 repository = new MemberRepositoryV0();
+    MemberRepositoryV1 repository;
+
+    // 테스트 실행 전 BeforeEach 먼저 실행행
+   @BeforeEach
+    void beforeEach() {
+//        // 기본 DriverManager - 항상 새로운 커넥션을 획득
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
+       HikariDataSource dataSource = new HikariDataSource();
+       dataSource.setJdbcUrl(URL);
+       dataSource.setUsername(USERNAME);
+       dataSource.setPassword(PASSWORD);
+        repository = new MemberRepositoryV1(dataSource);
+    }
 
     @Test
     void crud() throws SQLException {
@@ -43,5 +57,11 @@ class MemberRepositoryV0Test {
         // 삭제된 데이터 테스트 (멤버 검색 시 발생하는 에러가 터지는지 확인)
         assertThatThrownBy(() -> repository.findById(member.getMemberId()))
                 .isInstanceOf(NoSuchElementException.class);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
