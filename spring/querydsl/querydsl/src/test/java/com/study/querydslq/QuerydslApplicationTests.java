@@ -3,10 +3,9 @@ package com.study.querydslq;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.study.querydslq.entity.Hello;
 import com.study.querydslq.entity.QHello;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -15,7 +14,10 @@ import javax.persistence.PersistenceContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
+// 테스트 후 값 지울 때 트랜잭셔널 어노테이션 사용
+@Transactional  
+// 값을 저장하고 싶을 때 commit 어노테이션 사용
+//@Commit
 class QuerydslApplicationTests {
 
     @PersistenceContext // 다른 프레임워크로 사용 시 해당 어노테이션 사용
