@@ -13,6 +13,8 @@ spring:
       hibernate:
 #        show_sql : true
         format_sql: true
+        # querydsl ?? ??
+        use_sql_comments: true
 logging:
   level:
     org.hibernate.SQL: debug
