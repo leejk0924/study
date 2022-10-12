@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -632,5 +633,56 @@ public class QuerydslBasicTest {
     // 조합식으로 가능하여 메서드를 다른 쿼리에서도 재사용할 수 있다.
     private BooleanExpression allEq(String usernameCond, Integer ageCond) {
         return usernameEq(usernameCond).and(ageEq(ageCond));
+    }
+
+    // 벌크 연산은 영속성 컨텍스트를 무시하고 DB 에 쿼리를 바로 날린다.
+    // DB 의 상태와 영속성 컨텍스트와 달라진다.
+    @Test
+    public void bulkUpdate() {
+        // member1 = 10 -> member1
+        // member2 = 20 -> member2
+        // member3 = 30 -> member3
+        // member4 = 40 -> member4
+
+        // 영향을 받은 row 수
+        long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+        // [2] 그래서 벌크 연산 하고난 뒤 flush 와 clear 해준다.
+        em.flush();
+        em.clear();
+
+
+        // [1] DB 의 값보다 영속성 컨텍스트의 값이 우선순위를 가진다. (영속성 컨텍스트의 권한이 더 높다.)
+        // 그래서 영속성 컨텍스트에 값이 있는 상태에서 DB 의 값을 가져오면 DB 값을 버리고 영속성 컨텍스트를 유지한다.
+        // member1 = 10 -> 비회원
+        // member2 = 20 -> 비회원
+        // member3 = 30 -> member3
+        // member4 = 40 -> member4
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .fetch();
+        for (Member member1 : result) {
+            System.out.println("member1 = " + member1);
+        }
+    }
+
+    @Test
+    public void bulkAdd() {
+        long count = queryFactory
+                .update(member)
+                .set(member.age, member.age.add(1)) // .add 만 있고 뺴기 기능은 없으므로 add(-1) 해준다.
+//              .set(member.age, member.age.multiply(1))  // 곱하기
+                .execute();
+    }
+
+    @Test
+    public void bulkDelete() {
+        long count = queryFactory
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
     }
 }
