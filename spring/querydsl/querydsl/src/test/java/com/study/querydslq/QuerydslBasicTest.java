@@ -9,6 +9,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.study.querydslq.dto.MemberDto;
+import com.study.querydslq.dto.QMemberDto;
 import com.study.querydslq.dto.UserDto;
 import com.study.querydslq.entity.Member;
 import com.study.querydslq.entity.QMember;
@@ -556,6 +557,21 @@ public class QuerydslBasicTest {
                 .fetch();
         for (UserDto userDto : result) {
             System.out.println("userDto = " + userDto);
+        }
+    }
+
+    // Constructor 와 비슷한 방식이지만, 컴파일 에러를 발생시켜준다. (컴파일 시점에 타입 에러 발견해준다.)
+    // 단점1 : Q파일 생성해줘야한다.
+    // 단점2 : DTO 에 Querydsl 에 대한 의존성이 생긴다.
+    // 튜플은 가급적 리포지토리 안에서 사용하기기
+    @Test
+    public void findDtoByQueryProjection() {
+        List<MemberDto> result = queryFactory
+                .select(new QMemberDto(member.username, member.age))
+                .from(member)
+                .fetch();
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
         }
     }
 }
