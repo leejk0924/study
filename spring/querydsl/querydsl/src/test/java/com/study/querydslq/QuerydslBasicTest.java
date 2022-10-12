@@ -4,7 +4,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -599,5 +601,36 @@ public class QuerydslBasicTest {
                 .selectFrom(member)
                 .where(builder)
                 .fetch();
+    }
+
+    @Test
+    public void dynamicQuery_WhereParam() {
+        String usernameParam = "member1";
+        Integer ageParam = 10;
+
+        List<Member> result = searchMember2(usernameParam, ageParam);
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    private List<Member> searchMember2(String usernameCond, Integer ageCond) {
+        return queryFactory
+                .selectFrom(member)
+                // where 조건은 null 값은 무시한다.
+                .where(usernameEq(usernameCond), ageEq(ageCond))
+//                .where(allEq(usernameCond, ageCond)) // 조합하여 쿼리문제를 해결할 수 있다.
+                .fetch();
+    }
+
+    private BooleanExpression usernameEq(String usernameCond) {
+        return usernameCond != null ? member.username.eq(usernameCond) : null;
+    }
+
+    private BooleanExpression ageEq(Integer ageCond) {
+        return ageCond != null ? member.age.eq(ageCond) : null;
+    }
+
+    // 조합식으로 가능하여 메서드를 다른 쿼리에서도 재사용할 수 있다.
+    private BooleanExpression allEq(String usernameCond, Integer ageCond) {
+        return usernameEq(usernameCond).and(ageEq(ageCond));
     }
 }
