@@ -2,10 +2,14 @@ package com.study.querydslq;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.study.querydslq.dto.MemberDto;
+import com.study.querydslq.dto.UserDto;
 import com.study.querydslq.entity.Member;
 import com.study.querydslq.entity.QMember;
 import com.study.querydslq.entity.QTeam;
@@ -475,6 +479,83 @@ public class QuerydslBasicTest {
             Integer age = tuple.get(member.age);
             System.out.println("username = " + username);
             System.out.println("age = " + age);
+        }
+    }
+
+    /**
+     * JPQL new Operation 방법
+     */
+    @Test
+    public void findDtoByJPQL() {
+        // new operation 활용
+        List<MemberDto> result = em.createQuery("select new com.study.querydslq.dto.MemberDto(m.username, m.age) from Member m", MemberDto.class)
+                .getResultList();
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    public void findDtoBySetter() {
+        List<MemberDto> result = queryFactory
+                // bean 은 getter, setter 를 얘기하는 bean
+                // 기본생성자가 있어야 할 수 있다. (setter 를 통해서 값을 주입)
+                .select(Projections.bean(MemberDto.class,
+                        member.username,
+                        member.age))
+                .from(member)
+                .fetch();
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    public void findDtoByField() {
+        List<MemberDto> result = queryFactory
+                // 필드에 직접 값을 준다.    (private 이더라도 리플렉션을 통해 값을 넣는다.)
+                .select(Projections.fields(MemberDto.class,
+                        member.username,
+                        member.age))
+                .from(member)
+                .fetch();
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    public void findDtoByConstructor() {
+        List<UserDto> result = queryFactory
+                // 필드에 직접 값을 준다.    (private 이더라도 리플렉션을 통해 값을 넣는다.)
+                .select(Projections.constructor(UserDto.class,
+                        member.username,
+                        member.age))
+                .from(member)
+                .fetch();
+        for (UserDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    // 프로퍼티나, 필드 접근 생성 방식에서 이름이 다를 때 해결 방안으로 ExpressionUtils.as(source, alias) :필드나, 서브쿼리에 별칭 적용용
+   @Test
+    public void findUserDto() {
+        QMember memberSub = new QMember("memberSub");
+
+        List<UserDto> result = queryFactory
+                // 필드에 직접 값을 준다.    (private 이더라도 리플렉션을 통해 값을 넣는다.)
+                .select(Projections.fields(UserDto.class,
+                        // DTO 의 필드와 이름이 다를 경우 as 를 이용하여 이름 입력
+                        member.username.as("name"),
+
+                        ExpressionUtils.as(JPAExpressions
+                                .select(memberSub.age.max())
+                                .from(memberSub), "age")))
+                .from(member)
+                .fetch();
+        for (UserDto userDto : result) {
+            System.out.println("userDto = " + userDto);
         }
     }
 }
