@@ -1,7 +1,6 @@
 package com.study.querydslq.repository;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.study.querydslq.dto.MemberSearchCondition;
@@ -9,7 +8,6 @@ import com.study.querydslq.dto.MemberTeamDto;
 import com.study.querydslq.dto.QMemberTeamDto;
 import com.study.querydslq.entity.Member;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -71,8 +69,8 @@ public class MemberJpaRepository {
         if (hasText(condition.getTeamName())) {
             builder.and(team.name.eq(condition.getTeamName()));
         }
-        if (condition.getAgeGeo() != null) {
-            builder.and(member.age.goe(condition.getAgeGeo()));
+        if (condition.getAgeGoe() != null) {
+            builder.and(member.age.goe(condition.getAgeGoe()));
         }
         if (condition.getAgeLoe() != null) {
             builder.and(member.age.loe(condition.getAgeLoe()));
@@ -106,9 +104,9 @@ public class MemberJpaRepository {
                 // 동적 쿼리
                 .where(usernameEq(condition.getUsername()),
                         teamNameEq(condition.getTeamName()),
-//                        ageGoe(condition.getAgeGeo()),
-//                        ageLoe(condition.getAgeLoe()))
-                        ageBetween(condition.getAgeGeo(), condition.getAgeLoe()))
+                        ageGoe(condition.getAgeGoe()),
+                        ageLoe(condition.getAgeLoe()))
+//                        ageBetween(condition.getAgeGeo(), condition.getAgeLoe()))
                 .fetch();
     }
 
@@ -127,13 +125,11 @@ public class MemberJpaRepository {
         return hasText(teamName) ? team.name.eq(teamName) : null;
     }
 
-    private BooleanExpression ageGoe(Integer ageGeo) {
-        return ageGeo != null ? member.age.goe(ageGeo) : null;
+    private BooleanExpression ageGoe(Integer ageGoe) {
+        return ageGoe != null ? member.age.goe(ageGoe) : null;
     }
 
     private BooleanExpression ageLoe(Integer ageLoe) {
-        return ageLoe != null ? member.age.goe(ageLoe) : null;
+        return ageLoe != null ? member.age.loe(ageLoe) : null;
     }
-
-
 }

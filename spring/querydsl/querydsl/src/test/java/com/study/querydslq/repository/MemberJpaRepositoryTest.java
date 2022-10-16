@@ -1,11 +1,9 @@
 package com.study.querydslq.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.study.querydslq.dto.MemberSearchCondition;
 import com.study.querydslq.dto.MemberTeamDto;
 import com.study.querydslq.entity.Member;
 import com.study.querydslq.entity.Team;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -60,7 +58,7 @@ class MemberJpaRepositoryTest {
         em.persist(member4);
 
         MemberSearchCondition condition = new MemberSearchCondition();
-        condition.setAgeGeo(35);
+        condition.setAgeGoe(35);
         condition.setAgeLoe(40);
         condition.setTeamName("teamB");
         // searchByBuilder 테스트
