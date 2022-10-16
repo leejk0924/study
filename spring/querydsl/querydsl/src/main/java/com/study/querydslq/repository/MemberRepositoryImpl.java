@@ -2,13 +2,16 @@ package com.study.querydslq.repository;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.study.querydslq.dto.MemberSearchCondition;
 import com.study.querydslq.dto.MemberTeamDto;
 import com.study.querydslq.dto.QMemberTeamDto;
+import com.study.querydslq.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -75,12 +78,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
     public Page<MemberTeamDto> searchPageComplex(MemberSearchCondition condition, Pageable pageable) {
         List<MemberTeamDto> content = getContent(condition, pageable);
         // count 쿼리를 최적화 하고싶으면 나누어서 분리해야한다.
-        long total = getCount(condition);
-        return new PageImpl<>(content, pageable, total);
-    }
-
-    private long getCount(MemberSearchCondition condition) {
-        return queryFactory
+        JPAQuery<Member> countQuery = queryFactory
                 .select(member)
                 .from(member)
                 .leftJoin(member.team, team)
@@ -89,9 +87,15 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
                         teamNameEq(condition.getTeamName()),
                         ageGoe(condition.getAgeGoe()),
                         ageLoe(condition.getAgeLoe())
-                )
-                .fetchCount();
+                );
+        /*
+        count 쿼리를 생략가능한 경우
+        1. 페이지 시작이면서 컨텐츠 사이즈가 페이지 사이즈보다 작을 때
+        2. 마지막 페이지 일 때 (offset + 컨텐츠 사이즈를 더해서 전체 사이즈 구함함)
+        */
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
+
 
     private List<MemberTeamDto> getContent(MemberSearchCondition condition, Pageable pageable) {
         return queryFactory
