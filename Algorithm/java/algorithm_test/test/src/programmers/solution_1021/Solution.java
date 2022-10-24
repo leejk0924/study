@@ -1,6 +1,7 @@
 package programmers.solution_1021;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Solution {
     public int solution(String[][] clothes) {
@@ -34,25 +35,36 @@ public class Solution {
             // getOrDefault() : 찾는 키가 존재한다면 찾는 키의 값을 반환하고 없다면 기본 값을 반환하는 메서드
             cloth.put(clothe[1], cloth.getOrDefault(clothe[1], 0) + 1);
         }
-        
+
         // map 을 iterator()
         Iterator<Integer> it = cloth.values().iterator();
         int answer = 1;
 
-        while (it.hasNext()) {
-            answer *= it.next().intValue() + 1;
+//        while (it.hasNext()) {
+//            answer *= it.next().intValue() + 1;
+//        }
+        for (String s : cloth.keySet()) {
+            answer *= cloth.get(s)+1;
         }
         return answer - 1;
     }
+    public int Solution_stream(String[][] clothes) {
+        return Arrays.stream(clothes)
+                .collect(Collectors.groupingBy(s -> s[1], Collectors.mapping(p -> p[0], Collectors.counting())))
+                .values()
+                .stream()
+                .collect(Collectors.reducing(1L, (x, y) -> x * (y + 1))).intValue() - 1;
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
         String[][] a = {{"yellow_hat", "headgear"}, {"blue_sunglasses", "eyewear"}, {"green_turban", "headgear"}};
         String[][] b = {{"crow_mask", "face"}, {"blue_sunglasses", "face"}, {"smoky_makeup", "face"}};
 
-        System.out.println(solution.solution(a));
+//        System.out.println(solution.solution1(a));
         System.out.println("============");
-        System.out.println(solution.solution(b));
+//        System.out.println(solution.solution1(b));
 
     }
 }
