@@ -1,13 +1,14 @@
 package hellojpa;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
 @NoArgsConstructor
-@Data
+@Getter
 public class Address {
     // 주소
     private String city;

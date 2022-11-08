@@ -16,13 +16,21 @@ public class JpaMain {
 
         // 정석적으로 JPA 사용시 이와같이 사용하지만 스프링에서 다 자동으로 동작한다.
         try {
+            Address address = new Address("city", "street", "10000");
+
             Member member = new Member();
-            member.setUserName("hello");
+            member.setUserName("member1");
+            member.setHomeAddress(address);
 
-            member.setAddress(new Address("city", "street", "10"));
-            member.setPeriod(new Period());
+
+            Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipCode());
+            Member member2 = new Member();
+            member2.setUserName("member2");
+            member2.setHomeAddress(copyAddress);
+            em.persist(member2);
             em.persist(member);
-
+            member.getHomeAddress().setCity("newCity");
+            tx.commit();
         } catch (Exception e) {
             // 트랜잭션 롤백
             tx.rollback();
