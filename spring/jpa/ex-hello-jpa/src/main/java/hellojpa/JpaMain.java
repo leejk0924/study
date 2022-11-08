@@ -16,24 +16,13 @@ public class JpaMain {
 
         // 정석적으로 JPA 사용시 이와같이 사용하지만 스프링에서 다 자동으로 동작한다.
         try {
+            Member member = new Member();
+            member.setUserName("hello");
 
-            Parent parent = new Parent();
+            member.setAddress(new Address("city", "street", "10"));
+            member.setPeriod(new Period());
+            em.persist(member);
 
-            Child child1 = new Child();
-            Child child2 = new Child();
-            parent.addChild(child1);
-            parent.addChild(child2);
-
-            em.persist(parent);
-            em.persist(child1);
-            em.persist(child2);
-
-            em.flush();
-            em.clear();
-
-            Parent findParent = em.find(Parent.class, parent.getId());
-            findParent.getChildList().remove(0);
-            tx.commit();        // tx.commit() 할 때 commit 나간다.
         } catch (Exception e) {
             // 트랜잭션 롤백
             tx.rollback();

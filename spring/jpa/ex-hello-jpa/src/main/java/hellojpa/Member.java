@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 // @Entity 애너테이션은 JPA 를 사용하는 객체라고 인식시켜주고 관리하게 한다.
 @Entity
@@ -22,19 +19,18 @@ public class Member  extends BaseEntity{
     @Column(name="USERNAME")    // 필드명 매핑
     private String userName;
 
-    //    @Column(name = "TEAM_ID")
-//    private Long teamId;
-    @ManyToOne
-    @JoinColumn(name="TEAM_ID")     // DB와의 관계와 join 하는 컬럼명을 적어주어야 한다.
-    private Team team;  // 연관관계의 주인
+    // 기간
+    @Embedded
+    private Period period;
 
-
-
-    @OneToMany @JoinTable(name = "member")
-    private List<MemberProduct> memberProducts = new ArrayList<>();
-
-    public void changeTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this);
-    }
+    // 주소
+    @Embedded
+    private Address address;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city", column = @Column(name = "WORK_CITY")),
+            @AttributeOverride(name = "street", column = @Column(name = "WORK_STREET")),
+            @AttributeOverride(name = "zipCode", column = @Column(name = "WORK_ZIPCODE"))
+    })
+    private Address homeAddress;
 }
