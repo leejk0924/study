@@ -57,9 +57,11 @@ class BoardControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\": null, \"content\": \"내용입니다.\"}")
                 )
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
 //                .andExpect(MockMvcResultMatchers.content().string("{}"))  // 해당 검증은 json이 깨져서 나온다.
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("타이틀을 입력해주세요."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("400"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.validation.title").value("타이틀을 입력해주세요."))
                 .andDo(MockMvcResultHandlers.print());
     }
 }
