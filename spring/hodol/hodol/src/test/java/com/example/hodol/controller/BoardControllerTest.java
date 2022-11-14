@@ -49,4 +49,17 @@ class BoardControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string("post : Hello World"))
                 .andDo(MockMvcResultHandlers.print());
     }
+
+    @Test
+    @DisplayName("/post 요청 시 title 값은 필수")
+    void postTest2() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\": null, \"content\": \"내용입니다.\"}")
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.content().string("{}"))  // 해당 검증은 json이 깨져서 나온다.
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("타이틀을 입력해주세요."))
+                .andDo(MockMvcResultHandlers.print());
+    }
 }
