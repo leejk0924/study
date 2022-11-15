@@ -1,6 +1,8 @@
 package com.example.hodol.controller;
 
 import com.example.hodol.request.PostCreate;
+import com.example.hodol.service.BoardService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -13,7 +15,11 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class BoardController {
+
+    private final BoardService boardService;
+
     @GetMapping("/get")
     public String get() {
         return "get : Hello World";
@@ -36,16 +42,9 @@ public class BoardController {
         return "post : Hello World";
     }*/
     @PostMapping("/post")
-    public Map<String, String> post(@RequestBody @Valid PostCreate params) throws Exception {
-        // 데이터를 검증하는 이유
-        // 1. client 개발자가 실수할 수 있음
-        // 2. client bug 로 인해 값이 누락될 수 있다.
-        // 3. 외부의 나쁜 사람으로인해 값을 임의로 조작해서 보낼 수 있다.
-        // 4. DB에 값을 저장할 때 의도치 않은 오류가 발생할 수 있다.
-        // 5. 서버 개발자의 편안함을 위해
-
-        log.info("params={}", params);
-        // 잘못된 값을 보내주고 싶지만 controller로 요청이 오지 않음
+    public Map<String, String> post(@RequestBody @Valid PostCreate request) throws Exception {
+        boardService.write(request);
+        // 잘못된 값을 보내주고 싶지만 controller 로 요청이 오지 않음
         return Map.of();
     }
 }
