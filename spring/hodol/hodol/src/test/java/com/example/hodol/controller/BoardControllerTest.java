@@ -132,4 +132,25 @@ class BoardControllerTest {
         assertEquals("제목입니다.", board.getTitle());
         assertEquals("내용입니다.", board.getContent());
     }
+
+    @Test
+    @DisplayName("글 1개 조회")
+    void test4() throws Exception {
+        // given
+        Board board = Board
+                .builder()
+                .title("foo")
+                .content("bar")
+                .build();
+        boardRepository.save(board);
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", board.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(board.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("foo"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("bar"))
+                .andDo(MockMvcResultHandlers.print());
+    }
 }

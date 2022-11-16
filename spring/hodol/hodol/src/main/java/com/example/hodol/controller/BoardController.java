@@ -55,4 +55,14 @@ public class BoardController {
         return Map.of("postId", postId);
         // 잘못된 값을 보내주고 싶지만 controller 로 요청이 오지 않음
     }
+
+    /**
+     * /posts -> 글 전체 조회 (검색 + 페이징)
+     * /posts/{postId} -> 글 한개만 조회
+     */
+    @GetMapping("/posts/{postId}")
+    public Board get(@PathVariable(name = "postId") Long id) {
+        return boardService.get(id);
+
+    }
 }
