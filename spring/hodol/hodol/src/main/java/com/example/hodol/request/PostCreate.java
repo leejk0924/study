@@ -1,9 +1,6 @@
 package com.example.hodol.request;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
@@ -16,4 +13,50 @@ public class PostCreate {
     public String title;
     @NotBlank(message = "콘텐츠를 입력해주세요.")
     public String content;
+
+    @Builder
+    public PostCreate(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+
+    public PostCreate changeTitle(String title) {
+        return PostCreate
+                .builder()
+                .title(title)
+                .content(this.content)
+                .build();
+    }
+
+    //    빌더의 장점
+    // 1. 가독성이 좋다. (값 생성에 대한 유연함)
+    // 2. 필요한 값만 받을 수 있다. // -> (오버로딩 가능한 조건 찾아보기)
+    // 3. 객체의 불변성!!
+
+
+/*    // 필수 값 있는 빌더 직접 만들기
+        public static class MyBuilderPattern {
+        private String title;
+        private String content;
+
+        public MyBuilderPattern(String title) {
+            this.title = title;
+        }
+        public MyBuilderPattern(String title, String content) {
+            this.title = title;
+            this.content = content;
+        }
+
+        public MyBuilderPattern content(String content) {
+            this.content = content;
+            return this;
+        }
+        public PostCreate myBuild() {
+            return new PostCreate(this.title, this.content);
+        }
+    public static MyBuilderPattern myBuilder(String title) {
+        return new MyBuilderPattern(title);
+    }
+}*/
 }

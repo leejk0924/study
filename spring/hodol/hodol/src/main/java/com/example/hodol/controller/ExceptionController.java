@@ -1,6 +1,7 @@
 package com.example.hodol.controller;
 
 import com.example.hodol.response.ErrorResponse;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@NoArgsConstructor
 @ControllerAdvice
 public class ExceptionController {
 
@@ -22,7 +24,11 @@ public class ExceptionController {
     @ResponseBody
     public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
         // MethodArgumentNotValidException
-        ErrorResponse response = new ErrorResponse("400", "잘못된 요청입니다.");
+        ErrorResponse response = ErrorResponse
+                .builder()
+                .code("400")
+                .message("잘못된 요청입니다.")
+                .build();
         for (FieldError fieldError : e.getFieldErrors()) {
             response.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }

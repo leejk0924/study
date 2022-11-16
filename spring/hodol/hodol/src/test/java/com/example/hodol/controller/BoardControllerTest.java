@@ -2,13 +2,17 @@ package com.example.hodol.controller;
 
 import com.example.hodol.domain.Board;
 import com.example.hodol.repository.BoardRepository;
+import com.example.hodol.request.PostCreate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -16,8 +20,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc       // SpringBootTest 만 붙여주면 MockMvc 를 주입 받을 수 없으므로 해당 어노테이션을 추가
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 class BoardControllerTest {
 
     @Autowired
@@ -25,6 +30,9 @@ class BoardControllerTest {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void clean() {
@@ -56,22 +64,38 @@ class BoardControllerTest {
     @Test
     @DisplayName("/post 요청 시 Hello World 를 출력")
     void post() throws Exception {
+        PostCreate request = PostCreate
+                .builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/post")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\"}")
+                        .content(json)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
 //                .andExpect(MockMvcResultMatchers.content().string("post : Hello World"))
-                .andExpect(MockMvcResultMatchers.content().string("{}"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.postId").value("1"))
+//                .andExpect(MockMvcResultMatchers.content().string(""))
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
     @DisplayName("/post 요청 시 title 값은 필수")
     void postTest2() throws Exception {
+        PostCreate request = PostCreate
+                .builder()
+                .title(null)
+                .content("내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
         mockMvc.perform(MockMvcRequestBuilders.post("/post")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": null, \"content\": \"내용입니다.\"}")
+                        .content(json)
                 )
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
 //                .andExpect(MockMvcResultMatchers.content().string("{}"))  // 해당 검증은 json이 깨져서 나온다.
@@ -84,9 +108,20 @@ class BoardControllerTest {
     @Test
     @DisplayName("/posts 요청시 DB에 값이 저장된다.")
     void test3() throws Exception {
+        // given
+        PostCreate request = PostCreate
+                .builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/post")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\"}")
+                                .contentType(MediaType.APPLICATION_JSON)
+//                        .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\"}")
+                                // content 를 통해 RequestBody 로 데이터를 보낼 수 있다.
+                                .content(json)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
