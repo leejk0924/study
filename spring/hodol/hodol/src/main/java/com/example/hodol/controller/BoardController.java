@@ -2,6 +2,7 @@ package com.example.hodol.controller;
 
 import com.example.hodol.domain.Board;
 import com.example.hodol.request.PostCreate;
+import com.example.hodol.response.BoardResponse;
 import com.example.hodol.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +62,11 @@ public class BoardController {
      * /posts/{postId} -> 글 한개만 조회
      */
     @GetMapping("/posts/{postId}")
-    public Board get(@PathVariable(name = "postId") Long id) {
+    public BoardResponse get(@PathVariable(name = "postId") Long id) {
+        // Request 클래스
+        // Response 클래스
         return boardService.get(id);
-
+        // 서비스 정책에 맞는 응답 클래스를 분리하라
     }
+
 }

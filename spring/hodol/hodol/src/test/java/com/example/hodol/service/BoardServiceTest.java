@@ -3,6 +3,7 @@ package com.example.hodol.service;
 import com.example.hodol.domain.Board;
 import com.example.hodol.repository.BoardRepository;
 import com.example.hodol.request.PostCreate;
+import com.example.hodol.response.BoardResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +55,7 @@ class BoardServiceTest {
         boardRepository.save(requestBoard);
 
         // when
-        Board board = boardService.get(requestBoard.getId());
+        BoardResponse board = boardService.get(requestBoard.getId());
 
         //then
         Assertions.assertNotNull(requestBoard);

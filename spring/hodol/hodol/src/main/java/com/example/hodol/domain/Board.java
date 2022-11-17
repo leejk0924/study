@@ -27,4 +27,5 @@ public class Board {
         this.title = title;
         this.content = content;
     }
+    // 서비스의 정책을 Getter 에 넣는 것은 좋지 않음
 }
