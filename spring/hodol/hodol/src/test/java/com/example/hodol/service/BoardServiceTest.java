@@ -2,6 +2,7 @@ package com.example.hodol.service;
 
 import com.example.hodol.domain.Board;
 import com.example.hodol.repository.BoardRepository;
+import com.example.hodol.request.BoardSearch;
 import com.example.hodol.request.PostCreate;
 import com.example.hodol.response.BoardResponse;
 import org.junit.jupiter.api.Assertions;
@@ -84,15 +85,38 @@ class BoardServiceTest {
                 .collect(Collectors.toList());
 
         boardRepository.saveAll(requestBoard);
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
-        // when
-        // page 는 0부터 시작
-        List<BoardResponse> boards = boardService.getList(pageable);
+        BoardSearch boardSearch = BoardSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
+
+
+        List<BoardResponse> boards = boardService.getList(boardSearch);
 
         //then
-        Assertions.assertEquals(5L, boards.size());
+        Assertions.assertEquals(10L, boards.size());
         Assertions.assertEquals("title test 30", boards.get(0).getTitle());
         Assertions.assertEquals("title test 26", boards.get(4).getTitle());
     }
 
+    @Test
+    @DisplayName("글 여러개 조회")
+    void test3_1() {
+        // given
+        List<Board> requestBoard = IntStream.range(0, 20)
+                .mapToObj(i ->
+                        Board.builder()
+                                .title("title test " + i)
+                                .content("content test ")
+                                .build())
+                .collect(Collectors.toList());
+
+        boardRepository.saveAll(requestBoard);
+        BoardSearch boardSearch = BoardSearch.builder()
+                .page(1)
+                .build();
+        List<BoardResponse> boards = boardService.getList(boardSearch);
+        Assertions.assertEquals(10L, boards.size());
+        Assertions.assertEquals("title test 19", boards.get(0).getTitle());
+    }
 }

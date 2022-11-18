@@ -1,5 +1,6 @@
 package com.example.hodol.controller;
 
+import com.example.hodol.request.BoardSearch;
 import com.example.hodol.request.PostCreate;
 import com.example.hodol.response.BoardResponse;
 import com.example.hodol.service.BoardService;
@@ -70,8 +71,8 @@ public class BoardController {
     // 조회 API
     // 여러개의 글을 조회하는 API 생성
     @GetMapping("/posts")
-    public List<BoardResponse> getList(Pageable pageable) {
-        return boardService.getList(pageable);
+    public List<BoardResponse> getList(@ModelAttribute BoardSearch boardSearch) {
+        return boardService.getList(boardSearch);
     }
     // 어노테이션 사용해서 페이징 처리
 //    @GetMapping("/posts")

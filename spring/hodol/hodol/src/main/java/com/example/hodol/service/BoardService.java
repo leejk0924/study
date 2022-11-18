@@ -2,6 +2,7 @@ package com.example.hodol.service;
 
 import com.example.hodol.domain.Board;
 import com.example.hodol.repository.BoardRepository;
+import com.example.hodol.request.BoardSearch;
 import com.example.hodol.request.PostCreate;
 import com.example.hodol.response.BoardResponse;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +51,8 @@ public class BoardService {
     // 글이 너무 많은 경우 -> 비용이 너무 많이 든다.
     // 글이 -> 100,000,000 -> DB글 모두 조회하는 경우 -> DB가 뻗을 수 있다.
     // DB -> 애플리케이션 서버로 전달하는 시간, 트래픽비용 등이 많이 발생할 수 있다.
-    public List<BoardResponse> getList(Pageable pageable) {
-        return boardRepository.findAll(pageable).stream()
+    public List<BoardResponse> getList(BoardSearch boardSearch) {
+        return boardRepository.getList(boardSearch).stream()
                 .map(BoardResponse::new)
                 .collect(Collectors.toList());
     }
