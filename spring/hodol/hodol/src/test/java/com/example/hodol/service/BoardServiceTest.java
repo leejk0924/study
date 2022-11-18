@@ -10,8 +10,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,25 +72,27 @@ class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("글 여러개 조회")
+    @DisplayName("글 1페이지 조회")
     void test3() {
         // given
-        boardRepository.saveAll(List.of(
-                Board.builder()
-                        .title("foo1")
-                        .content("bar1")
-                        .build(),
-                Board.builder()
-                        .title("foo2")
-                        .content("bar2")
-                        .build()
-        ));
+        List<Board> requestBoard = IntStream.range(1, 31)
+                .mapToObj(i ->
+                        Board.builder()
+                                .title("title test " + i)
+                                .content("content test ")
+                                .build())
+                .collect(Collectors.toList());
 
+        boardRepository.saveAll(requestBoard);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
         // when
-        List<BoardResponse> boards = boardService.getList();
+        // page 는 0부터 시작
+        List<BoardResponse> boards = boardService.getList(pageable);
 
         //then
-        Assertions.assertEquals(2L, boards.size());
+        Assertions.assertEquals(5L, boards.size());
+        Assertions.assertEquals("title test 30", boards.get(0).getTitle());
+        Assertions.assertEquals("title test 26", boards.get(4).getTitle());
     }
 
 }

@@ -1,17 +1,15 @@
 package com.example.hodol.controller;
 
-import com.example.hodol.domain.Board;
 import com.example.hodol.request.PostCreate;
 import com.example.hodol.response.BoardResponse;
 import com.example.hodol.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +70,12 @@ public class BoardController {
     // 조회 API
     // 여러개의 글을 조회하는 API 생성
     @GetMapping("/posts")
-    public List<BoardResponse> getList() {
-        return boardService.getList();
+    public List<BoardResponse> getList(Pageable pageable) {
+        return boardService.getList(pageable);
     }
+    // 어노테이션 사용해서 페이징 처리
+//    @GetMapping("/posts")
+//    public List<BoardResponse> getList(@PageableDefault(size = 5) Pageable pageable) {
+//        return boardService.getList(pageable);
+//    }
 }

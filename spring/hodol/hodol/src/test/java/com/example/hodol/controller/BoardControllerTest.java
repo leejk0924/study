@@ -19,6 +19,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
@@ -159,29 +163,23 @@ class BoardControllerTest {
     @DisplayName("글 여러개 조회")
     void test5() throws Exception {
         // given
-        Board board = boardRepository.save(Board
-                .builder()
-                .title("title_1")
-                .content("content_1")
-                .build());
-
-        Board board2 = boardRepository.save(Board
-                .builder()
-                .title("title_2")
-                .content("content_2")
-                .build());
+        List<Board> requestBoard = IntStream.range(1, 31)
+                .mapToObj(i ->
+                        Board.builder()
+                                .title("title test " + i)
+                                .content("content test "+i)
+                                .build())
+                .collect(Collectors.toList());
+        boardRepository.saveAll(requestBoard);
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts")
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts?page=1&sort=id,desc")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(board.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("title_1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].content").value("content_1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(board2.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("title_2"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].content").value("content_2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()", Matchers.is(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(30))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("title test 30"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].content").value("content test 30"))
                 .andDo(MockMvcResultHandlers.print());
 
     }
