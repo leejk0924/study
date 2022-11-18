@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -63,4 +65,27 @@ class BoardServiceTest {
         Assertions.assertEquals("제목입니다.", board.getTitle());
         Assertions.assertEquals("내용입니다.", board.getContent());
     }
+
+    @Test
+    @DisplayName("글 여러개 조회")
+    void test3() {
+        // given
+        boardRepository.saveAll(List.of(
+                Board.builder()
+                        .title("foo1")
+                        .content("bar1")
+                        .build(),
+                Board.builder()
+                        .title("foo2")
+                        .content("bar2")
+                        .build()
+        ));
+
+        // when
+        List<BoardResponse> boards = boardService.getList();
+
+        //then
+        Assertions.assertEquals(2L, boards.size());
+    }
+
 }

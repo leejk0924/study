@@ -69,4 +69,10 @@ public class BoardController {
         // 서비스 정책에 맞는 응답 클래스를 분리하라
     }
 
+    // 조회 API
+    // 여러개의 글을 조회하는 API 생성
+    @GetMapping("/posts")
+    public List<BoardResponse> getList() {
+        return boardService.getList();
+    }
 }

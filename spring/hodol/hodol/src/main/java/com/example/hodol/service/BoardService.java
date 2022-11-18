@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,18 +32,23 @@ public class BoardService {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
 
-        BoardResponse response = BoardResponse.builder()
-                .id(board.getId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .build();
         /**
          * 서비스를 2곳으로 나눈다.
          * Controller -> WebBoardService -> Repository
          *               BoardService
          * Response 관련 서비스는 WebBoardService 에서 담당하고, 외부와 연동하는(다른 서비스와 연동) 하는 경우 BoardService 에서 처리하는 경우도 있음
          */
-        return response;
+        return BoardResponse.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .build();
 
+    }
+
+    public List<BoardResponse> getList() {
+        return boardRepository.findAll().stream()
+                .map(BoardResponse::new)
+                .collect(Collectors.toList());
     }
 }
