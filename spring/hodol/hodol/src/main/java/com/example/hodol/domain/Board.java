@@ -1,5 +1,6 @@
 package com.example.hodol.domain;
 
+import com.example.hodol.request.BoardEdit;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,5 +28,17 @@ public class Board {
         this.title = title;
         this.content = content;
     }
-    // 서비스의 정책을 Getter 에 넣는 것은 좋지 않음
+
+    // 빌더 반환
+    public BoardEditor.BoardEditorBuilder toEditor() {
+        return BoardEditor.builder()
+                .title(title)
+                .content(content);
+    }
+
+    public void edit(BoardEditor boardEditor) {
+        this.title = boardEditor.getTitle();
+        this.content = boardEditor.getContent();
+    }
+
 }

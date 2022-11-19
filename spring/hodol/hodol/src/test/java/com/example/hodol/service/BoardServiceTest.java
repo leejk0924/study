@@ -2,6 +2,7 @@ package com.example.hodol.service;
 
 import com.example.hodol.domain.Board;
 import com.example.hodol.repository.BoardRepository;
+import com.example.hodol.request.BoardEdit;
 import com.example.hodol.request.BoardSearch;
 import com.example.hodol.request.PostCreate;
 import com.example.hodol.response.BoardResponse;
@@ -118,5 +119,53 @@ class BoardServiceTest {
         List<BoardResponse> boards = boardService.getList(boardSearch);
         Assertions.assertEquals(10L, boards.size());
         Assertions.assertEquals("title test 19", boards.get(0).getTitle());
+    }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test4() {
+        // given
+        Board board = Board.builder()
+                .title("jk")
+                .content("jk test")
+                .build();
+
+        boardRepository.save(board);
+        BoardEdit boardEdit = BoardEdit.builder()
+                .title("cr")
+                .content("jk test")
+                .build();
+
+        //when
+        boardService.edit(board.getId(), boardEdit);
+        //then
+        Board changeBoard = boardRepository.findById(board.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + board.getId()));
+
+        Assertions.assertEquals("cr", changeBoard.getTitle());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void test5() {
+        // given
+        Board board = Board.builder()
+                .title("jk")
+                .content("jk test")
+                .build();
+
+        boardRepository.save(board);
+        BoardEdit boardEdit = BoardEdit.builder()
+                .title("jk")
+                .content("jk test2")
+                .build();
+
+        //when
+        boardService.edit(board.getId(), boardEdit);
+        //then
+        Board changeBoard = boardRepository.findById(board.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + board.getId()));
+
+        Assertions.assertEquals("jk test2", changeBoard.getContent());
     }
 }

@@ -2,6 +2,7 @@ package com.example.hodol.controller;
 
 import com.example.hodol.domain.Board;
 import com.example.hodol.repository.BoardRepository;
+import com.example.hodol.request.BoardEdit;
 import com.example.hodol.request.PostCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -205,6 +206,30 @@ class BoardControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.*", Matchers.hasSize(10)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("title test 30"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].content").value("content test 30"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("글제목 수정")
+    void test7() throws Exception {
+        // given
+        Board board = Board.builder()
+                .title("jk")
+                .content("jk test")
+                .build();
+
+        boardRepository.save(board);
+        BoardEdit boardEdit = BoardEdit.builder()
+                .title("cr")
+                .content("jk test")
+                .build();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.patch("/posts/{boardId}", board.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(boardEdit)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+
                 .andDo(MockMvcResultHandlers.print());
     }
 }

@@ -1,5 +1,6 @@
 package com.example.hodol.controller;
 
+import com.example.hodol.request.BoardEdit;
 import com.example.hodol.request.BoardSearch;
 import com.example.hodol.request.PostCreate;
 import com.example.hodol.response.BoardResponse;
@@ -79,4 +80,10 @@ public class BoardController {
 //    public List<BoardResponse> getList(@PageableDefault(size = 5) Pageable pageable) {
 //        return boardService.getList(pageable);
 //    }
+
+    // 수정기능
+    @PatchMapping("/posts/{boardId}")
+    public void edit(@PathVariable Long boardId, @RequestBody @Valid BoardEdit request) {
+        boardService.edit(boardId, request);
+    }
 }
