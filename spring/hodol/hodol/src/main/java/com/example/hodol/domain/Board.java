@@ -1,6 +1,5 @@
 package com.example.hodol.domain;
 
-import com.example.hodol.request.BoardEdit;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,5 +39,10 @@ public class Board {
         this.title = boardEditor.getTitle();
         this.content = boardEditor.getContent();
     }
+
+//    public void edit(String title, String content) {
+//        this.title = title;
+//        this.content = content;
+//    }
 
 }

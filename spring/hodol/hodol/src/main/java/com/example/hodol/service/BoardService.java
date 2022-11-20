@@ -64,9 +64,12 @@ public class BoardService {
 
         BoardEditor.BoardEditorBuilder editorBuilder = board.toEditor();
 
-        BoardEditor boardEditor = editorBuilder.title(boardEdit.getTitle())
+        BoardEditor boardEditor = editorBuilder
+                .title(boardEdit.getTitle())
                 .content(boardEdit.getContent())
                 .build();
         board.edit(boardEditor);
+//        board.edit(boardEdit.getTitle() != null ? boardEdit.getTitle() : board.getTitle(),
+//                boardEdit.getContent() != null ? boardEdit.getContent() : board.getContent());
     }
 }

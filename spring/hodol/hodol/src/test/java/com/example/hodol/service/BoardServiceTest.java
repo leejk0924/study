@@ -168,4 +168,28 @@ class BoardServiceTest {
 
         Assertions.assertEquals("jk test2", changeBoard.getContent());
     }
+    @Test
+    @DisplayName("글 내용 수정")
+    void
+    test10() {
+        // given
+        Board board = Board.builder()
+                .title("jk")
+                .content("jk test")
+                .build();
+
+        boardRepository.save(board);
+        BoardEdit boardEdit = BoardEdit.builder()
+                .content("jk test2")
+                .build();
+
+        //when
+        boardService.edit(board.getId(), boardEdit);
+        //then
+        Board changeBoard = boardRepository.findById(board.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + board.getId()));
+
+        Assertions.assertEquals("jk", changeBoard.getTitle());
+        Assertions.assertEquals("jk test2", changeBoard.getContent());
+    }
 }
