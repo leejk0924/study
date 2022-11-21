@@ -1,6 +1,7 @@
 package com.example.hodol.service;
 
 import com.example.hodol.domain.Board;
+import com.example.hodol.exception.BoardNotFound;
 import com.example.hodol.repository.BoardRepository;
 import com.example.hodol.request.BoardEdit;
 import com.example.hodol.request.BoardSearch;
@@ -194,7 +195,7 @@ class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("게시글 삭제")
+    @DisplayName("게시글 삭제 - 존재하는 글")
     void test6() {
         // given
         Board board = Board.builder()
@@ -205,5 +206,67 @@ class BoardServiceTest {
         boardRepository.save(board);
         boardService.delete(board.getId());
         Assertions.assertEquals(0, boardRepository.count());
+    }
+    @Test
+    @DisplayName("글 1개 조회")
+    void test7() {
+        // given
+        Board requestBoard = Board.builder()
+                .title("jk")
+                .content("jk test")
+                .build();
+        boardRepository.save(requestBoard);
+
+        // when
+//        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
+//            boardService.get(requestBoard.getId() + 1L);
+//        }, "예외처리가 잘못 되었습니다.");
+//        Assertions.assertEquals("존재하지 않는 글입니다.", e.getMessage());
+        Assertions.assertThrows(BoardNotFound.class, () -> {
+            boardService.get(requestBoard.getId() + 1L);
+        });
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 - 존재하지 않는 글")
+    void test8() {
+        // given
+        Board board = Board.builder()
+                .title("jk")
+                .content("jk test")
+                .build();
+        boardRepository.save(board);
+
+//        // when
+//        boardService.delete(board.getId());
+//
+//        //then
+//        Assertions.assertThrows(BoardNotFound.class, ()->{
+//            boardService.get(board.getId() + 1L);
+//        });
+        // expected
+        Assertions.assertThrows(BoardNotFound.class, () -> {
+            boardService.delete(board.getId() + 1L);
+        });
+    }
+
+    @Test
+    @DisplayName("글 내용 수정 - 존재하지 않는 글")
+    void test9() {
+        // given
+        Board board = Board.builder()
+                .title("jk")
+                .content("jk test")
+                .build();
+
+        boardRepository.save(board);
+        BoardEdit boardEdit = BoardEdit.builder()
+                .content("jk test2")
+                .build();
+        //expected
+        Assertions.assertThrows(BoardNotFound.class, () -> {
+            boardService.edit(board.getId()+1L, boardEdit);
+        });
+
     }
 }

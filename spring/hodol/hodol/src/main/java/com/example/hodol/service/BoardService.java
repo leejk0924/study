@@ -2,6 +2,7 @@ package com.example.hodol.service;
 
 import com.example.hodol.domain.Board;
 import com.example.hodol.domain.BoardEditor;
+import com.example.hodol.exception.BoardNotFound;
 import com.example.hodol.repository.BoardRepository;
 import com.example.hodol.request.BoardEdit;
 import com.example.hodol.request.BoardSearch;
@@ -33,7 +34,7 @@ public class BoardService {
 
     public BoardResponse get(Long id) {
         Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(() -> new BoardNotFound());
 
         /**
          * 서비스를 2곳으로 나눈다.
@@ -60,7 +61,7 @@ public class BoardService {
     @Transactional
     public void edit(Long id, BoardEdit boardEdit) {
         Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(BoardNotFound::new);
 
         BoardEditor.BoardEditorBuilder editorBuilder = board.toEditor();
 
@@ -75,7 +76,7 @@ public class BoardService {
 
     public void delete(Long id) {
         Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(BoardNotFound::new);
 
         boardRepository.delete(board);
 
