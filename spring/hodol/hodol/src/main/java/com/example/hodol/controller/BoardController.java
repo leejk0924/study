@@ -86,4 +86,9 @@ public class BoardController {
     public void edit(@PathVariable Long boardId, @RequestBody @Valid BoardEdit request) {
         boardService.edit(boardId, request);
     }
+
+    @DeleteMapping("/posts/{boardId}")
+    public void delete(@PathVariable Long boardId) {
+        boardService.delete(boardId);
+    }
 }

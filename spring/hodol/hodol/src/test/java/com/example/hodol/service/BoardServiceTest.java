@@ -192,4 +192,18 @@ class BoardServiceTest {
         Assertions.assertEquals("jk", changeBoard.getTitle());
         Assertions.assertEquals("jk test2", changeBoard.getContent());
     }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void test6() {
+        // given
+        Board board = Board.builder()
+                .title("jk")
+                .content("jk test")
+                .build();
+
+        boardRepository.save(board);
+        boardService.delete(board.getId());
+        Assertions.assertEquals(0, boardRepository.count());
+    }
 }

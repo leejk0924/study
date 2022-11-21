@@ -168,7 +168,7 @@ class BoardControllerTest {
                 .mapToObj(i ->
                         Board.builder()
                                 .title("title test " + i)
-                                .content("content test "+i)
+                                .content("content test " + i)
                                 .build())
                 .collect(Collectors.toList());
         boardRepository.saveAll(requestBoard);
@@ -184,6 +184,7 @@ class BoardControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].content").value("content test 30"))
                 .andDo(MockMvcResultHandlers.print());
     }
+
     @Test
     @DisplayName("페이지를 0으로 요청하면 첫 페이지를 가져온다.")
     void test6() throws Exception {
@@ -192,7 +193,7 @@ class BoardControllerTest {
                 .mapToObj(i ->
                         Board.builder()
                                 .title("title test " + i)
-                                .content("content test "+i)
+                                .content("content test " + i)
                                 .build())
                 .collect(Collectors.toList());
         boardRepository.saveAll(requestBoard);
@@ -230,6 +231,22 @@ class BoardControllerTest {
                         .content(objectMapper.writeValueAsString(boardEdit)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
 
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제제")
+    void test8() throws Exception {
+        Board board = Board.builder()
+                .title("jk")
+                .content("jk test")
+                .build();
+        boardRepository.save(board);
+
+        // expected
+        mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postId}", board.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
 }
