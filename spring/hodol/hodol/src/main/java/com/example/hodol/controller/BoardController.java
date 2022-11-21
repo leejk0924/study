@@ -1,5 +1,6 @@
 package com.example.hodol.controller;
 
+import com.example.hodol.exception.InvalidRequest;
 import com.example.hodol.request.BoardEdit;
 import com.example.hodol.request.BoardSearch;
 import com.example.hodol.request.PostCreate;
@@ -52,6 +53,7 @@ public class BoardController {
         // Bad Case : 서버에서 -> 반드시 이렇게 할껍니다! fix
         //            -> 서버에서 차라리 유연하게 대응하는게 좋습니다. -> 코드를 잘 짜야함
         //            -> 한 번에 일괄적으로 잘 처리되는 케이스는 없습니다. -> 잘관리하는 형태가 중요
+        request.validate();
         Long postId = boardService.write(request);
         return Map.of("postId", postId);
         // 잘못된 값을 보내주고 싶지만 controller 로 요청이 오지 않음
