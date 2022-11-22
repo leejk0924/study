@@ -1,0 +1,17 @@
+# Hodol
+:toc:
+
+== asciidoc 문법사용해서 보기
+asciidoc 문법으로 작성
+
+=== CURL
+
+include::{snippets}/index/curl-request.adoc[]
+
+=== 요청
+
+include::{snippets}/index/http-request.adoc[]
+
+=== 응답
+
+include::{snippets}/index/http-response.adoc[]
