@@ -7,6 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -22,18 +24,21 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
 @SpringBootTest
+@AutoConfigureMockMvc
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "api.jk.com", uriPort = 443)
 @ExtendWith(RestDocumentationExtension.class)
 public class BoardControllerDocTest {
+    @Autowired
     private MockMvc mockMvc;
     @Autowired
     private BoardRepository boardRepository;
 
-    @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .apply(documentationConfiguration(restDocumentation))
-                .build();
-    }
+//    @BeforeEach
+//    void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
+//        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+//                .apply(documentationConfiguration(restDocumentation))
+//                .build();
+//    }
 
     @Test
     @DisplayName("글 단건 조회 테스트")
