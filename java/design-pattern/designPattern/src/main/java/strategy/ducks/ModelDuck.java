@@ -1,7 +1,7 @@
-package adapter.ducks;
+package strategy.ducks;
 
-import adapter.ducks.behavior.FlyNoWay;
-import adapter.ducks.behavior.Quack;
+import strategy.ducks.behavior.FlyNoWay;
+import strategy.ducks.behavior.Quack;
 
 public class ModelDuck extends Duck{
     public ModelDuck() {

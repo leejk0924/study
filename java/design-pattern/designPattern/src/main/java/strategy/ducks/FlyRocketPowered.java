@@ -1,6 +1,6 @@
-package adapter.ducks;
+package strategy.ducks;
 
-import adapter.ducks.behavior.FlyBehavior;
+import strategy.ducks.behavior.FlyBehavior;
 
 public class FlyRocketPowered implements FlyBehavior {
     @Override

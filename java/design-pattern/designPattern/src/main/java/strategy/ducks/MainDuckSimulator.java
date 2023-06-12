@@ -1,4 +1,4 @@
-package adapter.ducks;
+package strategy.ducks;
 
 public class MainDuckSimulator {
     public static void main(String[] args) {

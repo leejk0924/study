@@ -1,4 +1,4 @@
-package adapter.ducks.behavior;
+package strategy.ducks.behavior;
 
 public class Squak implements QuackBehavior{
     @Override

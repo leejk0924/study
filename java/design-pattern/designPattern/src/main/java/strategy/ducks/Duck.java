@@ -1,7 +1,7 @@
-package adapter.ducks;
+package strategy.ducks;
 
-import adapter.ducks.behavior.FlyBehavior;
-import adapter.ducks.behavior.QuackBehavior;
+import strategy.ducks.behavior.FlyBehavior;
+import strategy.ducks.behavior.QuackBehavior;
 
 public abstract class Duck {
     FlyBehavior flyBehavior;
