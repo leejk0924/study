@@ -10,4 +10,8 @@ public class MallardDuck extends Duck {
         flyBehavior = new FlyWithWings();
     }
 
+    @Override
+    void display() {
+        System.out.println("I'm MallardDuck");
+    }
 }

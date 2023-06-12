@@ -8,4 +8,9 @@ public class RedHeadDuck extends Duck{
         quackBehavior = new Quack();
         flyBehavior = new FlyWithWings();
     }
+
+    @Override
+    void display() {
+
+    }
 }
